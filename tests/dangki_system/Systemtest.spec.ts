@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginpage } from '../page/loginpage';
+import { loginpage } from '../../page/loginpage';
 import {enterText,selectRadioButton,checkCheckbox,uncheckCheckbox,selectDropdownValue,hoverToSeeTooltip,
     handleDialog,
     getTableCellText,
@@ -8,20 +8,13 @@ import {enterText,selectRadioButton,checkCheckbox,uncheckCheckbox,selectDropdown
     dragDrop,
     clickElement,
     expectElementToBeVisible
-  } from '../page/UI_interactions';
+  } from '../../page/UI_interactions';
 import { create } from 'domain';
+import { chromium } from 'playwright';
 
-function generateRandomString(length: number): string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        result += characters[randomIndex];
-    }
-    return result;
-}
-let     randomtext = generateRandomString(8)
-let     randomtext1 = generateRandomString(5)
+import {RandomString}  from '../../page/UI_interactions';
+let     randomtext = RandomString(8)
+let     randomtext1 = RandomString(5)
 
 test.beforeEach(async({page})=>{
     // mt dev  for hrm test
@@ -33,7 +26,7 @@ test.beforeEach(async({page})=>{
     // await   page.locator('#notification_1 div').filter({ hasText: 'Thông báoĐăng nhập thành công' }).getByRole('img').click()
 
     // mt  stg https://test01.hrm.stg.dev-tokyotechlab.com/user
-     await   page.goto('https://test01.hrm.stg.dev-tokyotechlab.com/')
+     await  page.goto('https://test01.hrm.stg.dev-tokyotechlab.com/')
     await   page.locator('#email').fill('thaont@tokyotechlab.com')
     await   page.locator('#password').fill('Ttlab@1234')
     await   page.locator('#kc-login').click()
@@ -678,7 +671,7 @@ test.describe('Danh gia nhan su' , ()=>{
 
         const   nguoidanhgia = await page.locator('.col-12 > .form-group > .position-relative > .select-form > .el-select > .el-select__wrapper > .el-select__selection')
         await   nguoidanhgia.click()
-        await   page.getByRole('option', { name: 'Uyen' , exact:true }).click()
+        await   page.getByRole('option', { name: 'Thao' , exact:true }).click()
 
         const   tenphieudanhgia = await page.locator('.col-md-12 > .form-group > .position-relative > .el-input > .el-input__wrapper')
         await   tenphieudanhgia.fill('hehe')
