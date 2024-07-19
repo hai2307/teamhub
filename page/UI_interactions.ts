@@ -27,9 +27,10 @@ export function Randomint(length: number) {
   return result;
 }
 // Hàm Để Nhấp Chuột Vào Một Phần Tử
-export async function clickElement(page: Page, selector: string): Promise<void> {
+export async function clickElement(page: Page, selector: string): Promise<void> { 
   await page.waitForSelector(selector);
   await page.click(selector);
+  await page.waitForLoadState();
 }
 
 
@@ -39,10 +40,12 @@ export async function clickElement(page: Page, selector: string): Promise<void> 
 export async function enterText(page: Page, selector: string, text: string): Promise<void> {
   const inputField = await page.waitForSelector(selector);
   await inputField.fill(text);
+  await page.waitForLoadState();
 }
 // Radio Buttons
 
 export async function selectRadioButton(page: Page, selector: string): Promise<void> {
+  await page.waitForLoadState();
   await page.waitForSelector(selector);
   await page.check(selector);
 }
@@ -50,21 +53,25 @@ export async function selectRadioButton(page: Page, selector: string): Promise<v
 // Checkboxes
 
 export async function checkCheckbox(page: Page, selector: string): Promise<void> {
+  await page.waitForLoadState();
   await page.waitForSelector(selector);
   await page.check(selector);
 }
 
 export async function uncheckCheckbox(page: Page, selector: string): Promise<void> {
+  await page.waitForSelector(selector);
   await page.uncheck(selector);
 }
 // Lists and Dropdowns
 export async function selectDropdownValue(page: Page, selector: string, value: string): Promise<void> {
+  await page.waitForLoadState();
   await page.waitForSelector(selector);
   await page.selectOption(selector, value);
 }
 
 // Tooltips
 export async function hoverToSeeTooltip(page: Page, selector: string): Promise<void> {
+  await page.waitForLoadState();
   await page.waitForSelector(selector);
   await page.hover(selector);
   
@@ -72,6 +79,7 @@ export async function hoverToSeeTooltip(page: Page, selector: string): Promise<v
 
 // Dialog Boxes
 export async function handleDialog(page: Page, action: 'accept' | 'dismiss', text?: string): Promise<void> {
+  await page.waitForLoadState();
   page.once('dialog', async dialog => {
     if (text) {
       await dialog.accept(text);
@@ -84,6 +92,7 @@ export async function handleDialog(page: Page, action: 'accept' | 'dismiss', tex
 }
 // Web Tables
 export async function getTableCellText(page: Page, selector: string, rowIndex: number, colIndex: number): Promise<string> {
+  await page.waitForLoadState();
   const cellSelector = `${selector} tr:nth-child(${rowIndex + 1}) td:nth-child(${colIndex + 1})`;
   return await page.textContent(cellSelector) ?? '';
 }
@@ -183,7 +192,6 @@ export async function expectInputValue(page: Page, selector: string, expectedVal
   await expect(input).toHaveValue(expectedValue);
 }
 // Kiểm tra checkbox có được chọn
-
 export async function expectCheckboxToBeChecked(page: Page, selector: string, checked: boolean): Promise<void> {
   await page.waitForSelector(selector);
   const checkbox = await page.locator(selector);

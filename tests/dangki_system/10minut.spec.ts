@@ -18,10 +18,12 @@ import {RandomString}  from '../../page/UI_interactions';
 
 const randomString = RandomString(5)
 const randomString3 = RandomString(3)
+const randomtendoanhnghiep = RandomString(6)
+const randomtenmien = RandomString(3)
 // const randommail = RandomString(4)
 
 test("mail10minut", async ({ }) => {
-    test.setTimeout(400000)
+    test.setTimeout(300000)
     const browser = await chromium.launch()
     const Context = await browser.newContext()
 
@@ -38,8 +40,8 @@ test("mail10minut", async ({ }) => {
     await   page1.getByRole('button', { name: 'Copy to clipboard' }).click()
     
 
-    await page2.goto('https://org-console.iam-center.dev-tokyotechlab.com/register')
-    await expect(page2.locator('.register-form-title')).toBeVisible()
+    await  page2.goto('https://org-console.iam-center.dev-tokyotechlab.com/register')
+    await  expect(page2.locator('.register-form-title')).toBeVisible()
 
     const   chondichvu = await page2.locator('div:nth-child(5) > .mdi-chevron-down').first()
     await   chondichvu.click()
@@ -52,9 +54,8 @@ test("mail10minut", async ({ }) => {
 
     const   email = await page2.locator('#input-12')
     await   email.click()
-    await page2.keyboard.down('Control');
-    await page2.keyboard.press('KeyV'); // Paste
-    // await page2.keyboard.up('Control');
+    await   page2.keyboard.down('Control');
+    await   page2.keyboard.press('KeyV'); // Paste
     await   page2.waitForTimeout(1000);
  
     // await   email.fill(`${tenmail}`)
@@ -75,12 +76,14 @@ test("mail10minut", async ({ }) => {
     const   toidongy = await page2.getByLabel('Tôi đồng ý với các điều khoản')
     await   toidongy.click()
 
-    // const   dangky = await page2.locator('[class="d-flex align-center"]')
     const   dangky = await page2.locator('//button[@type="button"]')
     await   dangky.click()
+    await   page2.waitForLoadState()
+    await   page2.waitForSelector('[class="register-notification-success"]')
+    await   expect(page2.locator('[class="register-notification-success"]')).toBeVisible()
 
-    // const   dkthanhcong =await page2.getByRole('heading', { name: 'Đăng ký tài khoản thành công' })
-    // await   expect(dkthanhcong).toBeVisible()
+    const   dkthanhcong =await page2.getByRole('heading', { name: 'Đăng ký tài khoản thành công' })
+    await   expect(dkthanhcong).toBeVisible()
    
     await page3.goto('https://admin-console.iam-center.dev-tokyotechlab.com/')
     await expect(page3.locator('[class="logo"]')).toBeVisible()
@@ -95,8 +98,7 @@ test("mail10minut", async ({ }) => {
 
     
     await   page1.waitForTimeout(5000)  
-    const  thongbaokichhoat = page1.getByRole('link', { name: '[TeamHub] Thông báo về việc kích hoạt' })
-    // await expect(thongbaokichhoat).toBeVisible()
+    const   thongbaokichhoat = page1.getByRole('link', { name: '[TeamHub] Thông báo về việc kích hoạt' }).first()
     await   thongbaokichhoat.click()
     await   page1.keyboard.press('Enter')
 
@@ -104,7 +106,6 @@ test("mail10minut", async ({ }) => {
     const [newPage] = await Promise.all([
         Context.waitForEvent('page'), // Đợi trang mới mở ra
         page1.getByRole('link', { name: 'Kích hoạt' }).first().click()
-        // page1.frameLocator('iframe[name="html_msg_body"]').getByRole('link', { name: 'Kích hoạt' }).click()
       ]);
 
      // đổi mật khẩu 
@@ -118,6 +119,7 @@ test("mail10minut", async ({ }) => {
     // dang nhap 
     await  newPage.waitForLoadState()
     await  newPage.waitForTimeout(2000)
+    await  newPage.getByRole('button', { name: 'Đăng nhập' }).click()
     await  newPage.getByPlaceholder('Nhập email').click()
     await  newPage.keyboard.down('Control');
     await  newPage.keyboard.press('KeyV'); // Pas
@@ -127,7 +129,58 @@ test("mail10minut", async ({ }) => {
     await  newPage.getByRole('button', { name: 'Đăng nhập' }).click()
     await  newPage.getByText('Truy cập').first().click()
     // await  expect(newPage.getByRole('img', { name: 'coming soon' })).toBeVisible()
-    await page1.pause()
+
+    await   page2.reload()
+    await   chondichvu.click()
+
+    await   dv_hrm.click()
+    await   email.click()
+    await   page2.keyboard.down('Control');
+    await   page2.keyboard.press('KeyV'); // Paste
+    await   page2.waitForTimeout(1000);
+ 
+    await   tendoanhnghiep.fill(randomtendoanhnghiep)
+
+    await   tenmien.fill(randomtenmien)
+
+    await   nguoidaidien.fill('haitt')
+
+    await   sdt.fill('0977681123')
+
+    await   toidongy.click()
+
+    await   dangky.click()
+    await   page2.waitForLoadState()
+    await   page2.waitForSelector('[class="register-notification-success"]')
+    await   expect(page2.locator('[class="register-notification-success"]')).toBeVisible()
+    // await   expect(dkthanhcong).toBeVisible()
+
+    await   page3.waitForLoadState()
+    await   page3.locator('a').filter({ hasText: 'Danh sách doanh nghiệp' }).click()
+    await   page3.locator('//input[@placeholder="Tìm kiếm"]').clear()
+    await   page3.locator('//input[@placeholder="Tìm kiếm"]').fill(randomtendoanhnghiep)
+    await   page3.getByRole('button', { name: 'Tìm kiếm' }).click()
+    await   page3.getByRole('button', { name: 'Chờ phê duyệt' }).first().click()
+    await   page3.getByText('Kích hoạt').click()
+    await   page1.waitForTimeout(100000)  
+    await   thongbaokichhoat.click()
+    const [newPage1] = await Promise.all([
+         
+        Context.waitForEvent('page'), // Đợi trang mới mở ra
+        page1.getByRole('link', { name: 'Kích hoạt' }).first().click()
+      ]);
+
+      await  newPage1.waitForLoadState()
+      await  newPage1.getByRole('button', { name: 'Đăng nhập' }).click()
+      await  newPage1.getByPlaceholder('Nhập email').click()
+      await  newPage1.keyboard.down('Control');
+      await  newPage1.keyboard.press('KeyV'); // Pas
+      await  newPage1.waitForTimeout(2000)
+      await  newPage1.getByPlaceholder('Nhập mật khẩu').fill('Ab@123456')
+      await  newPage1.waitForTimeout(2000)
+      await  newPage1.getByRole('button', { name: 'Đăng nhập' }).click()
+      await  newPage1.getByText('Truy cập').first().click()
+     await  expect(newPage1.getByRole('img', { name: 'coming soon' })).toBeVisible()
 
 
 })

@@ -10,7 +10,7 @@ export class Button {
     await page.waitForLoadState();
     await loading.waitLoadingHidden(page);
   }
-
+                   
   async checkDisplayedButton(page: Page, text: string) {
     await page.isEnabled(DYNAMIC_ELEMENT.BUTTON_NAME(text));
   }
